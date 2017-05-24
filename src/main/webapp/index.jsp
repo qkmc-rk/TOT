@@ -9,7 +9,7 @@
 <body>
 	<h1>Silent Open<small>love no edge</small></h1>
 	<audio autoplay="autoplay" controls="controls"loop="loop" preload="auto"
-	            src="http://demo.mimvp.com/html5/take_you_fly.mp3">
+	            src=" <%= request.getContextPath()%>/music/silentopen.mp3">
 	      你的浏览器不支持audio标签
 	</audio>
 </body>
