@@ -1,0 +1,85 @@
+/* 
+	users表用于存储用户的信息
+*/
+
+CREATE TABLE iot_users(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+	user_login VARCHAR(16) NOT NULL,
+	user_pass VARCHAR(32),
+	old_pass VARCHAR(32),
+	user_name VARCHAR(12),
+	user_mail VARCHAR(32),
+	user_url VARCHAR(32),
+	user_regtime timestamp(255) NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+	user_status enum('true','false') NOT NULL,              --user status,use true or false set whether the user is actived.
+	display_name VARCHAR(12)
+);
+
+/*
+	admin表与users表一对一,用于指定该用户是否是管理员,可以直接在users表中添加管理员字段
+	我这样分开写显得有些多余
+*/
+
+CREATE TABLE iot_admin(
+	admin_id INT PRIMARY KEY AUTO_INCREMENT,
+	admin_status enum('true','false') NOT NULL,     --whether the admin is on,something troubled.
+	user_id INT UNIQUE,
+	FOREIGN KEY (user_id) REFERENCES iot_users(id)     --foreign key, unique,reference to user id.
+);
+
+
+/*
+	blogs表有许多关系,与users表有多对一的关系,与blog_tags表有多对多的关系,与blog_comments表有一对多的关系
+*/
+
+CREATE TABLE iot_blogs(
+	blog_id INT PRIMARY KEY AUTO_INCREMENT,
+	publisher_id INT NOT NULL,
+	publish_time timestamp(255) NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+	blog_read INT NOT NULL,				--read times
+	blog_great INT NOT NULL,			--点赞数
+	blog_content text,
+	/*评论表另外做,评论表外键参照blog_id*/
+	/*博客与标签是多对多的关系,需要一张关系表*/
+);
+
+/*
+	tags表是用来存放blog的标签的,它与blog表属于多对多的关系
+*/
+
+CREATE TABLE iot_tags(
+	tag_id INT PRIMARY KEY AUTO_INCREMENT,
+	tag_name enum('JAVA','C','C#','front-end','JS','PYTHON','RUBY','DB','IOS','Android','PHP','others') NOT NULL,
+);
+
+/*
+	blog_tag表是关系表,博客和其标签之间多对多的关系.
+*/
+
+CREATE TABLE iot_blog_tag(
+	blog_tag_id INT PRIMARY KEY AUTO_INCREMENT,
+	f_blog_id INT,
+	FOREIGN KEY (f_blog_id) REFERENCES iot_blogs(blog_id),
+	f_tag_id INT,
+	FOREIGN key (f_tag_id) REFERENCES iot_tags(tag_id)
+);
+
+/*
+	comments表,是评论表,用于存放对博客的评论内容,与blogs表是多对一的关系.
+*/
+
+CREATE TABLE iot_comments(
+	comment_id INT PRIMARY KEY AUTO_INCREMENT,
+	commenter VARCHAR(12) NOT NULL,
+	commenter_email VARCHAR(32) NOT NULL,
+	comment_time timestamp(255) NOT NULL ON UPDATE CURRENT_TIMESTAMP,
+	comment_content text NOT NULL,
+	comment_f_blog_id INT,
+	FOREIGN KEY (comment_f_blog_id) REFERENCES iot_blogs(blog_id)
+);
+
+/***********************************************/
+
+/*
+	trends表,是工作室最新动态表,它用于发表工作室项目,工作室活动等内容.
+*/
