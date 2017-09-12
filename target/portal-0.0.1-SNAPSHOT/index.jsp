@@ -7,9 +7,9 @@
 <title>silent open</title>
 </head>
 <body>
-	<h1>Silent Open<small>love no edge</small></h1>
+	<h1>Silent Open</h1>
 	<audio autoplay="autoplay" controls="controls"loop="loop" preload="auto"
-	            src=" <%= request.getContextPath()%>/music/silentopen.mp3">
+	            src=" http://118.89.56.220/silentopen.mp3">
 	      你的浏览器不支持audio标签
 	</audio>
 </body>
